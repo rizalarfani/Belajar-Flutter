@@ -11,6 +11,7 @@ class GojekAppBar extends AppBar {
   {
     return Container(
       padding: EdgeInsets.only(left: 15.0, right: 15.0),
+      color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
