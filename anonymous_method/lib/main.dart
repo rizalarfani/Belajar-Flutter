@@ -9,8 +9,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Color warna = ;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
