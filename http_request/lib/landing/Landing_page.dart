@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:clone_gojek/constant.dart';
-import 'package:clone_gojek/beranda/BerandaPage.dart';
+import 'package:http_request/lansia/Maps_lansia.dart';
+import 'package:http_request/beranda/Beranda_page.dart';
+import 'package:http_request/login.dart';
+import 'package:http_request/berita/listBerita.dart';
 
-class Home_view extends StatefulWidget {
+class Landing_page extends StatefulWidget {
   @override
-  _Home_viewState createState() => _Home_viewState();
+  _Landing_pageState createState() => _Landing_pageState();
 }
 
-class _Home_viewState extends State<Home_view> {
+class _Landing_pageState extends State<Landing_page> {
 
   int _bottomNavIndex = 0;
   List<Widget> _container = [
-    new BerandaPage(),
+    Beranda_page(),
+    Maps_lansia(),
+    ListBerita(),
+    Login()
   ];
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _container[_bottomNavIndex],
-      bottomNavigationBar: _buildBottomNovaigation(),
+      bottomNavigationBar: _buildBottomNavigation(),
     );
   }
 
-  Widget _buildBottomNovaigation ()
+  Widget _buildBottomNavigation ()
   {
-    return new BottomNavigationBar(
+    return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       onTap: (i) {
         setState(() {
           _bottomNavIndex = i;
-          print(_bottomNavIndex);
         });
       },
       currentIndex: _bottomNavIndex,
@@ -38,7 +41,7 @@ class _Home_viewState extends State<Home_view> {
         BottomNavigationBarItem(
           activeIcon: Icon(
             Icons.home,
-            color: GojekPalet.green,
+            color: Colors.blueAccent,
           ),
           icon: Icon(
             Icons.home,
@@ -50,41 +53,41 @@ class _Home_viewState extends State<Home_view> {
         ),
         BottomNavigationBarItem(
           activeIcon: Icon(
-            Icons.assignment,
-            color: GojekPalet.green,
+            Icons.map,
+            color: Colors.blueAccent,
           ),
           icon: Icon(
-            Icons.assignment,
-            color: Colors.grey,
+            Icons.map,
+            color: Colors.grey
           ),
           title: Text(
-            "Pesanan"
+            "Peta Lansia"
           ),
         ),
         BottomNavigationBarItem(
           activeIcon: Icon(
-            Icons.mail,
-            color: GojekPalet.green,
+            Icons.new_releases,
+            color: Colors.blueAccent,
           ),
           icon: Icon(
-            Icons.mail,
-            color: Colors.grey,
+            Icons.new_releases,
+            color: Colors.grey
           ),
           title: Text(
-            "Inbox"
+            "Berita"
           ),
         ),
-        BottomNavigationBarItem(
+        BottomNavigationBarItem( 
           activeIcon: Icon(
-            Icons.person,
-            color: GojekPalet.green,
+            Icons.verified_user,
+            color: Colors.blueAccent,
           ),
           icon: Icon(
-            Icons.person,
-            color: Colors.grey,
+            Icons.verified_user,
+            color: Colors.grey
           ),
           title: Text(
-            "Profile"
+            "Login"
           ),
         ),
       ],
