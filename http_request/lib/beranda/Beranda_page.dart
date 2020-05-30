@@ -5,6 +5,11 @@ import 'package:http_request/lansia/List_lansia.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http_request/model/ApiService.dart';
 import 'package:http_request/model/modelBerita.dart';
+import 'package:http_request/buku_tamu/AddBukuTamu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Beranda_page extends StatefulWidget {
   @override
@@ -13,6 +18,9 @@ class Beranda_page extends StatefulWidget {
 
 class _Beranda_pageState extends State<Beranda_page> {
   ApiService apiService;
+  int jumlah;
+  int jumlahAllLansia;
+  int jumlahDiDampingi;
   static final List<String> imgSlider = [
     'assets/slider/slider_1.jpg',
     'assets/slider/slider_2.jpg',
@@ -42,17 +50,59 @@ class _Beranda_pageState extends State<Beranda_page> {
     aspectRatio: 1.0,
   );
 
+  var statusIsLogin;
+  var nama;
+  var kode_pdm;
+  getPrev() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      statusIsLogin = pref.getInt("status");
+      nama = pref.getString("name");
+      kode_pdm = pref.getString('kode_pdm');
+    });
+  }
+
+  Future<dynamic> getJumlah() async {
+    String kd = kode_pdm;
+    final response = await http.get(
+        "http://10.0.3.2/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kd");
+    print(kode_pdm.toString());
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      setState(() {
+        jumlah = result['jumlahHistory'];
+        jumlahAllLansia = result['jumlahLansia'];
+        jumlahDiDampingi = result['jumlahLansiaDamping'];
+        print(result);
+      });
+    } else {
+      print("Gagal");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     apiService = ApiService();
+    getPrev();
+    getJumlah();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Beranda_AppBar(),
+      appBar: Beranda_AppBar(
+        statusLogin: statusIsLogin,
+        name: nama,
+      ),
       body: _buildBerandaPage(),
     );
   }
@@ -69,6 +119,7 @@ class _Beranda_pageState extends State<Beranda_page> {
             color: Colors.white,
             child: Column(
               children: <Widget>[
+                statusIsLogin == null ? Container() : _buildJempolanInfo(),
                 _buildJempolanService(),
               ],
             ),
@@ -94,7 +145,7 @@ class _Beranda_pageState extends State<Beranda_page> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(
-            "Berita Terbaru",
+            "Berita Terbaru ",
             style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -137,9 +188,7 @@ class _Beranda_pageState extends State<Beranda_page> {
       itemBuilder: (context, index) {
         Berita berita = beritas[index];
         return GestureDetector(
-          onTap: (){
-
-          },
+          onTap: () {},
           child: Container(
             width: 200.0,
             margin: EdgeInsets.only(right: 10.0),
@@ -167,12 +216,140 @@ class _Beranda_pageState extends State<Beranda_page> {
     );
   }
 
+  Widget _buildJempolanInfo() {
+    return Container(
+      height: 150.0,
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [const Color(0xff3164bd), const Color(0xff295cb5)],
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(5.0))),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(15.0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [const Color(0xff3164cd), const Color(0xff295cb5)],
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                ),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Nama :",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  nama,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w800),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 15.0, right: 30.0, left: 30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          border: Border.all(color: Colors.white)),
+                      child: Icon(
+                        Icons.folder,
+                        color: Colors.white,
+                        size: 32.0,
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 5.0)),
+                    Text(
+                      jumlahAllLansia.toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          border: Border.all(color: Colors.white)),
+                      child: Icon(
+                        Icons.person_outline,
+                        color: Colors.white,
+                        size: 32.0,
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 5.0)),
+                    Text(
+                      jumlahDiDampingi.toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          border: Border.all(color: Colors.white)),
+                      child: Icon(
+                        Icons.history,
+                        color: Colors.white,
+                        size: 32.0,
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 5.0)),
+                    Text(
+                      jumlah.toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildJempolanService() {
     return SizedBox(
       width: double.infinity,
       height: 120.0,
       child: Container(
-        margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+        margin: EdgeInsets.only(top: 15.0, bottom: 8.0),
         child: GridView.count(
           physics: ClampingScrollPhysics(),
           crossAxisCount: 4,
@@ -240,32 +417,38 @@ class _Beranda_pageState extends State<Beranda_page> {
                 ),
               ),
             ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.purple),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0))),
-                        padding: EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.book,
-                          color: Colors.purple,
-                          size: 30.0,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddBukuTamu()));
+              },
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.purple),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          padding: EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.book,
+                            color: Colors.purple,
+                            size: 30.0,
+                          ),
                         ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 6.0)),
-                      Text(
-                        "Buku Tamu",
-                        style: TextStyle(fontSize: 13.0),
-                      ),
-                    ],
-                  )
-                ],
+                        Padding(padding: EdgeInsets.only(top: 6.0)),
+                        Text(
+                          "Buku Tamu",
+                          style: TextStyle(fontSize: 13.0),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             GestureDetector(
@@ -290,7 +473,7 @@ class _Beranda_pageState extends State<Beranda_page> {
                                   BorderRadius.all(Radius.circular(20.0))),
                           padding: EdgeInsets.all(10.0),
                           child: Icon(
-                            Icons.devices_other,
+                            Icons.apps,
                             color: Colors.grey,
                             size: 30.0,
                           ),
@@ -386,32 +569,37 @@ class _Beranda_pageState extends State<Beranda_page> {
               ),
             ),
           ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.purple),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(20.0))),
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.book,
-                        color: Colors.purple,
-                        size: 30.0,
+          GestureDetector(
+            onTap: () => Navigator.push(context, MaterialPageRoute(
+              builder: (context) => AddBukuTamu(),
+            )),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.purple),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0))),
+                        padding: EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.book,
+                          color: Colors.purple,
+                          size: 30.0,
+                        ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 6.0)),
-                    Text(
-                      "Buku Tamu",
-                      style: TextStyle(fontSize: 13.0),
-                    ),
-                  ],
-                )
-              ],
+                      Padding(padding: EdgeInsets.only(top: 6.0)),
+                      Text(
+                        "Buku Tamu",
+                        style: TextStyle(fontSize: 13.0),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
           GestureDetector(
@@ -420,7 +608,7 @@ class _Beranda_pageState extends State<Beranda_page> {
               showModalBottomSheet<void>(
                   context: context,
                   builder: (context) {
-                    return _buildServiceBottomSheet();
+                    return _buildModalInfo();
                   });
             },
             child: Container(
@@ -512,4 +700,20 @@ class _Beranda_pageState extends State<Beranda_page> {
       ),
     );
   }
+
+  Widget _buildModalInfo()
+  {
+    return Container(
+      height: 400.0,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15)
+        )
+      ),
+    );
+  }
+
 }

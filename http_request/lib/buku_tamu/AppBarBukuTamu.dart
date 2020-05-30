@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 
-class Beranda_AppBar extends AppBar {
-  String name;
-  int statusLogin;
-  Beranda_AppBar({this.name,this.statusLogin})
+class AppBarBukuTamu extends AppBar {
+  AppBarBukuTamu()
       : super(
             elevation: 0.25,
             backgroundColor: Colors.blueAccent,
-            flexibleSpace: _buildAppBar(statusLogin,name));
+            flexibleSpace: _buildAppBar());
 
-  static Widget _buildAppBar(status,name) {
+  static Widget _buildAppBar() {
     return SafeArea(
       child: Container(
         padding: EdgeInsets.only(left: 15.0, right: 15.0,top: 5.0,bottom: 5.0),
         color: Colors.blueAccent,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Image.asset(
               "assets/logo/logo_jempolan.png",
@@ -23,24 +21,13 @@ class Beranda_AppBar extends AppBar {
               width: 50.0,
             ),
             Text(
-              "JEMPOLAN",
+              "Jempolan",
               style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,),
                   textAlign: TextAlign.center,
             ),
-            status == 200 ? Text(
-              name.toString(),
-              style: TextStyle(
-                fontSize: 15.0,
-                color: Colors.white
-              ),
-            ) : Icon(
-              Icons.account_circle,
-              color: Colors.white,
-              size: 30.0,
-            )
           ],
         ),
       ),

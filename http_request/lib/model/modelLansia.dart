@@ -36,3 +36,20 @@ String getLansiaToJson (Lansia data)
   final jsonData = data.toJson();
   return json.encode(jsonData);
 }
+
+class Users {
+  String lastname;
+  String first_name;
+  String id;
+
+  Users({this.first_name,this.lastname,this.id});
+
+  factory Users.fromJson(Map<String,dynamic> map) {
+    return Users(first_name: map['first_name'],lastname: map['last_name'],id: map['id']);
+  }
+}
+
+List<Users> listUser(String jsonData) {
+  List<dynamic> listUser = (jsonData as Map<String,dynamic>)['result'];
+  return List<Users>.from(listUser.map((item) => Users.fromJson(item))); 
+}

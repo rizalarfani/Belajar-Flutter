@@ -3,6 +3,8 @@ import 'package:http_request/lansia/Maps_lansia.dart';
 import 'package:http_request/beranda/Beranda_page.dart';
 import 'package:http_request/login.dart';
 import 'package:http_request/berita/listBerita.dart';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Landing_page extends StatefulWidget {
   @override
@@ -11,13 +13,40 @@ class Landing_page extends StatefulWidget {
 
 class _Landing_pageState extends State<Landing_page> {
 
+  var statusIsLogin;
+  getPrev() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      statusIsLogin = pref.getInt("status");
+    });
+  }
+
+  logOut() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      pref.remove("id");
+      pref.remove("status");
+      pref.remove("name");
+    });
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_){
+      return new Landing_page();
+    }));
+  }
+
   int _bottomNavIndex = 0;
   List<Widget> _container = [
     Beranda_page(),
     Maps_lansia(),
     ListBerita(),
-    Login()
+    Login(),
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getPrev();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +62,7 @@ class _Landing_pageState extends State<Landing_page> {
       type: BottomNavigationBarType.fixed,
       onTap: (i) {
         setState(() {
-          _bottomNavIndex = i;
+          _bottomNavIndex = statusIsLogin == 200 && i == 3 ? logOut() : i;
         });
       },
       currentIndex: _bottomNavIndex,
@@ -83,11 +112,11 @@ class _Landing_pageState extends State<Landing_page> {
             color: Colors.blueAccent,
           ),
           icon: Icon(
-            Icons.verified_user,
+            statusIsLogin == 200 ? Icons.settings_bluetooth : Icons.verified_user,
             color: Colors.grey
           ),
           title: Text(
-            "Login"
+            statusIsLogin == 200 ? "Logout" : "Login"
           ),
         ),
       ],
