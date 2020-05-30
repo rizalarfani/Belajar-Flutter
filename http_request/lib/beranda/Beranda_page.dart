@@ -66,17 +66,28 @@ class _Beranda_pageState extends State<Beranda_page> {
     String kd = kode_pdm;
     final response = await http.get(
         "http://10.0.3.2/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kd");
-    print(kode_pdm.toString());
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       setState(() {
         jumlah = result['jumlahHistory'];
         jumlahAllLansia = result['jumlahLansia'];
         jumlahDiDampingi = result['jumlahLansiaDamping'];
-        print(result);
       });
     } else {
       print("Gagal");
+    }
+  }
+
+  String infoAplikasi;
+  Future<dynamic> getContent() async {
+    final response =
+        await http.get("http://10.0.3.2/jempolan/ApiLansia/content");
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      Map<String, dynamic> value = result['resutl'];
+      setState(() {
+        infoAplikasi = value['TENTANG'];
+      });
     }
   }
 
@@ -87,6 +98,7 @@ class _Beranda_pageState extends State<Beranda_page> {
     apiService = ApiService();
     getPrev();
     getJumlah();
+    getContent();
   }
 
   @override
@@ -570,9 +582,11 @@ class _Beranda_pageState extends State<Beranda_page> {
             ),
           ),
           GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(
-              builder: (context) => AddBukuTamu(),
-            )),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddBukuTamu(),
+                )),
             child: Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -701,19 +715,46 @@ class _Beranda_pageState extends State<Beranda_page> {
     );
   }
 
-  Widget _buildModalInfo()
-  {
+  Widget _buildModalInfo() {
     return Container(
       height: 400.0,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(15),
-          topRight: Radius.circular(15)
-        )
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+              height: 50.0,
+              width: double.infinity,
+              color: Colors.blueAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Apa si Jempolan??",
+                    style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ],
+              )),
+          SizedBox(
+            height: 25.0,
+          ),
+          Container(
+            margin: EdgeInsets.all(15),
+            child: Text(infoAplikasi.toString(),
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black38)),
+          )
+        ],
       ),
     );
   }
-
 }
