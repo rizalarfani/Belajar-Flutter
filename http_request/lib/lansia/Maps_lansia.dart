@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Maps_lansia extends StatefulWidget {
+class MapsLansia extends StatefulWidget {
   @override
-  _Maps_lansiaState createState() => _Maps_lansiaState();
+  _MapsLansiaState createState() => _MapsLansiaState();
 }
 
-class _Maps_lansiaState extends State<Maps_lansia> {
+class _MapsLansiaState extends State<MapsLansia> {
   @override
   Widget build(BuildContext context) {
     return Center(

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http_request/model/ApiService.dart';
-import 'package:http_request/beranda/Beranda_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_request/landing/Landing_page.dart';
-import 'dart:async';
 
 class Login extends StatefulWidget {
   @override
@@ -186,12 +184,11 @@ class _LoginState extends State<Login> {
                             String id = result['id'];
                             String name = result['first_name'];
                             String lastName = result['last_name'];
-                            String kd_pd = result['KD_PDM'];
+                            String kodePdm = result['KD_PDM'];
                             int status = value['status'];
-                            print(kd_pd);
-                            savePref(id, name, status,lastName,kd_pd);
+                            savePref(id, name, status,lastName,kodePdm);
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-                              return new Landing_page();
+                              return new Landingpage();
                             }));
                           } else {
                             _scaffoldState.currentState.showSnackBar(SnackBar(

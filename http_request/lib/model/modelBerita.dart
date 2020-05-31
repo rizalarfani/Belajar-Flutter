@@ -1,28 +1,28 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 
 class  Berita {
-  String id_berita;
+  String idBerita;
   String judul;
   String aouthor;
   String foto;
+  String created;
 
-  Berita({this.id_berita,this.judul,this.aouthor,this.foto});
+  Berita({this.idBerita,this.judul,this.aouthor,this.foto,this.created});
 
   factory Berita.fromJson(Map<String, dynamic> map)
   {
-    return Berita(id_berita: map["ID_BERITA"],judul: map["JUDUL"],aouthor: map["AUTHOR"],foto: map["FOTO"]);
+    return Berita(idBerita: map["ID_BERITA"],judul: map["JUDUL"],aouthor: map["AUTHOR"],foto: map["FOTO"],created: map['CREATED_AT']);
   }
 
   Map<String, dynamic> toJson ()
   {
-    return {"id_berita" : id_berita,"judul" : judul,"aouthor" : aouthor,"foto" : foto};
+    return {"id_berita" : idBerita,"judul" : judul,"aouthor" : aouthor,"foto" : foto,"created": created};
   }
 
   @override
   String toString ()
   {
-    return 'Berita{id_berita: $id_berita,judul: $judul,aouthor: $aouthor,foto: $foto}';
+    return 'Berita{id_berita: $idBerita,judul: $judul,aouthor: $aouthor,foto: $foto.created: $created}';
   }
 }
 

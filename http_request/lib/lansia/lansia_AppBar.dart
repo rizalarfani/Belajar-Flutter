@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Lansia_AppBar extends AppBar {
-  Lansia_AppBar()
+class LansiaAppBar extends AppBar {
+  LansiaAppBar()
       : super(
             elevation: 0.25,
             backgroundColor: Colors.blueAccent,

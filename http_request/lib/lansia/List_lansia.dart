@@ -13,7 +13,6 @@ class _ListLansiaState extends State<ListLansia> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     apiService = ApiService();
   }
@@ -25,7 +24,7 @@ class _ListLansiaState extends State<ListLansia> {
 
   Widget _buildListLansia() {
     return Scaffold(
-      appBar: Lansia_AppBar(),
+      appBar: LansiaAppBar(),
       body: SafeArea(
         child: FutureBuilder(
           future: apiService.getLansia(),

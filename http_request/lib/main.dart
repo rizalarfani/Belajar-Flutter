@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http_request/lansia/lansia_AppBar.dart';
 import 'package:http_request/landing/Landing_page.dart';
 
 void main() {
@@ -16,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Landing_page(),
+      home: Landingpage(),
     );
   }
 }

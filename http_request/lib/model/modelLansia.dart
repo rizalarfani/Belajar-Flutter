@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 
 class Lansia {
   String name;
@@ -39,13 +38,13 @@ String getLansiaToJson (Lansia data)
 
 class Users {
   String lastname;
-  String first_name;
+  String firstname;
   String id;
 
-  Users({this.first_name,this.lastname,this.id});
+  Users({this.firstname,this.lastname,this.id});
 
   factory Users.fromJson(Map<String,dynamic> map) {
-    return Users(first_name: map['first_name'],lastname: map['last_name'],id: map['id']);
+    return Users(firstname: map['first_name'],lastname: map['last_name'],id: map['id']);
   }
 }
 

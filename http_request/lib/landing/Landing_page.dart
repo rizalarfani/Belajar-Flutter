@@ -3,15 +3,14 @@ import 'package:http_request/lansia/Maps_lansia.dart';
 import 'package:http_request/beranda/Beranda_page.dart';
 import 'package:http_request/login.dart';
 import 'package:http_request/berita/listBerita.dart';
-import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Landing_page extends StatefulWidget {
+class Landingpage extends StatefulWidget {
   @override
-  _Landing_pageState createState() => _Landing_pageState();
+  _LandingpageState createState() => _LandingpageState();
 }
 
-class _Landing_pageState extends State<Landing_page> {
+class _LandingpageState extends State<Landingpage> {
 
   var statusIsLogin;
   getPrev() async {
@@ -29,21 +28,20 @@ class _Landing_pageState extends State<Landing_page> {
       pref.remove("name");
     });
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (_){
-      return new Landing_page();
+      return new Landingpage();
     }));
   }
 
   int _bottomNavIndex = 0;
   List<Widget> _container = [
-    Beranda_page(),
-    Maps_lansia(),
+    BerandaPage(),
+    MapsLansia(),
     ListBerita(),
     Login(),
   ];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getPrev();
   }

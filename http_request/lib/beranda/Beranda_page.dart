@@ -7,16 +7,17 @@ import 'package:http_request/model/ApiService.dart';
 import 'package:http_request/model/modelBerita.dart';
 import 'package:http_request/buku_tamu/AddBukuTamu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_request/berita/listBerita.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class Beranda_page extends StatefulWidget {
+class BerandaPage extends StatefulWidget {
   @override
-  _Beranda_pageState createState() => _Beranda_pageState();
+  _BerandaPageState createState() => _BerandaPageState();
 }
 
-class _Beranda_pageState extends State<Beranda_page> {
+class _BerandaPageState extends State<BerandaPage> {
   ApiService apiService;
   int jumlah;
   int jumlahAllLansia;
@@ -52,20 +53,24 @@ class _Beranda_pageState extends State<Beranda_page> {
 
   var statusIsLogin;
   var nama;
-  var kode_pdm;
+  var kodePdm;
   getPrev() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       statusIsLogin = pref.getInt("status");
       nama = pref.getString("name");
-      kode_pdm = pref.getString('kode_pdm');
+      kodePdm = pref.getString('kode_pdm');
     });
   }
 
-  Future<dynamic> getJumlah() async {
-    String kd = kode_pdm;
+  void getJumlah() async {
+    String kode;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      kode = pref.getString('kode_pdm');
+    });
     final response = await http.get(
-        "http://10.0.3.2/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kd");
+        "http://10.0.3.2/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kode");
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       setState(() {
@@ -93,7 +98,6 @@ class _Beranda_pageState extends State<Beranda_page> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     apiService = ApiService();
     getPrev();
@@ -102,16 +106,9 @@ class _Beranda_pageState extends State<Beranda_page> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Beranda_AppBar(
+      appBar: BerandaAppbar(
         statusLogin: statusIsLogin,
         name: nama,
       ),
@@ -121,7 +118,7 @@ class _Beranda_pageState extends State<Beranda_page> {
 
   Widget _buildBerandaPage() {
     return Container(
-      color: Colors_page.grey,
+      color: Colorspage.grey,
       child: ListView(
         physics: ClampingScrollPhysics(),
         children: <Widget>[
@@ -209,10 +206,12 @@ class _Beranda_pageState extends State<Beranda_page> {
               children: <Widget>[
                 ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(35)),
-                    child: Image.asset(
-                      'assets/slider/slider_2.jpg',
-                      width: 200.0,
+                    child: Image.network(
+                      "https://jempolan.tegalkota.go.id/uploads/berita/" +
+                          berita.foto,
+                      width: 150.0,
                       height: 150.0,
+                      fit: BoxFit.cover,
                     )),
                 Text(
                   berita.judul,
@@ -682,32 +681,37 @@ class _Beranda_pageState extends State<Beranda_page> {
               ],
             ),
           ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.amberAccent),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(20.0))),
-                      padding: EdgeInsets.all(10.0),
-                      child: Icon(
-                        Icons.new_releases,
-                        color: Colors.amberAccent,
-                        size: 30.0,
+          GestureDetector(
+            onTap: () => {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => ListBerita()))
+            },
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.amberAccent),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0))),
+                        padding: EdgeInsets.all(10.0),
+                        child: Icon(
+                          Icons.new_releases,
+                          color: Colors.amberAccent,
+                          size: 30.0,
+                        ),
                       ),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 6.0)),
-                    Text(
-                      "Berita",
-                      style: TextStyle(fontSize: 13.0),
-                    ),
-                  ],
-                )
-              ],
+                      Padding(padding: EdgeInsets.only(top: 6.0)),
+                      Text(
+                        "Berita",
+                        style: TextStyle(fontSize: 13.0),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],

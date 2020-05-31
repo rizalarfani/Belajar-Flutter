@@ -1,6 +1,5 @@
 import 'package:http_request/model/modelLansia.dart';
 import 'package:http_request/model/modelBerita.dart';
-import 'package:http_request/login.dart';
 import 'package:http/http.dart' show Client;
 import 'dart:async';
 import 'dart:convert';
@@ -64,8 +63,8 @@ class ApiService {
     }
   }
 
-  Future<dynamic> jumlahHistory(String kode_pdm) async {
-    final response = await client.get("$baseUrl/ApiLansia/infoJumlah?kode_pendamping=$kode_pdm");
+  Future<dynamic> jumlahHistory(String kodepdm) async {
+    final response = await client.get("$baseUrl/ApiLansia/infoJumlah?kode_pendamping=$kodepdm");
     if (response.statusCode == 200){
       final result = jsonDecode(response.body);
       return result;
