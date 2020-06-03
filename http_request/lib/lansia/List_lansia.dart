@@ -36,8 +36,8 @@ class _ListLansiaState extends State<ListLansia> {
                     "Something wrong with message: ${snapshot.error.toString()}"),
               );
             } else if (snapshot.connectionState == ConnectionState.done) {
-              List<Lansia> profiles = snapshot.data;
-              return _buildListView(profiles);
+              List<Lansia> list = snapshot.data;
+              return _buildListView(list);
             } else {
               return Center(
                 child: CircularProgressIndicator(),

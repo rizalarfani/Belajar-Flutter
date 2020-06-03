@@ -41,6 +41,7 @@ class _LoginState extends State<Login> {
   Widget _buildLogin() {
     return Scaffold(
       key: _scaffoldState,
+      resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Stack(overflow: Overflow.visible, children: <Widget>[
           Container(

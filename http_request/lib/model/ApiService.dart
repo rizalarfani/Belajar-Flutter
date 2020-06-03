@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  final String baseUrl = "http://10.0.3.2/jempolan";
+  final String baseUrl = "http://192.168.43.74/jempolan";
   Client client = Client();
 
   getPrev() async {
@@ -15,7 +15,7 @@ class ApiService {
   }
 
   Future<List<Lansia>> getLansia() async {
-    final response = await client.get("$baseUrl/ApiLansia");
+    final response = await client.get("$baseUrl/ApiLansia/lansia");
     if (response.statusCode == 200) {
       return listLansia(response.body);
     } else {
@@ -56,6 +56,17 @@ class ApiService {
     });
     if(response.statusCode == 200){
       final result = jsonDecode(response.body);
+      return result;
+    } else {
+      final result = jsonDecode(response.body);
+      return result;
+    }
+  }
+
+  Future<List<Lansia>> listLansiaPdm(String kode) async {
+    final response = await client.get("$baseUrl/ApiLansia/lansia?kode_pdm=$kode");
+    if (response.statusCode == 200) {
+      final result = listLansia(response.body);
       return result;
     } else {
       final result = jsonDecode(response.body);

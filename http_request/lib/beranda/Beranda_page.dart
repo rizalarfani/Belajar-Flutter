@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http_request/model/ApiService.dart';
 import 'package:http_request/model/modelBerita.dart';
 import 'package:http_request/buku_tamu/AddBukuTamu.dart';
+import 'package:http_request/kirimRantang/listLansia.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_request/berita/listBerita.dart';
 import 'dart:async';
@@ -70,7 +71,7 @@ class _BerandaPageState extends State<BerandaPage> {
       kode = pref.getString('kode_pdm');
     });
     final response = await http.get(
-        "http://10.0.3.2/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kode");
+        "http://192.168.43.74/jempolan/ApiLansia/infoJumlah?kode_pendamping=$kode");
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       setState(() {
@@ -86,7 +87,7 @@ class _BerandaPageState extends State<BerandaPage> {
   String infoAplikasi;
   Future<dynamic> getContent() async {
     final response =
-        await http.get("http://10.0.3.2/jempolan/ApiLansia/content");
+        await http.get("http://192.168.43.74/jempolan/ApiLansia/content");
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       Map<String, dynamic> value = result['resutl'];
@@ -365,32 +366,39 @@ class _BerandaPageState extends State<BerandaPage> {
           physics: ClampingScrollPhysics(),
           crossAxisCount: 4,
           children: <Widget>[
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blueAccent),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0))),
-                        padding: EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.blue,
-                          size: 30.0,
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ListLansiaPdm(kode: kodePdm))),
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blueAccent),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          padding: EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.send,
+                            color: Colors.blue,
+                            size: 30.0,
+                          ),
                         ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 6.0)),
-                      Text(
-                        "Krim Rantang",
-                        style: TextStyle(fontSize: 13.0),
-                      ),
-                    ],
-                  )
-                ],
+                        Padding(padding: EdgeInsets.only(top: 6.0)),
+                        Text(
+                          "Krim Rantang",
+                          style: TextStyle(fontSize: 13.0),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             GestureDetector(
@@ -683,7 +691,8 @@ class _BerandaPageState extends State<BerandaPage> {
           ),
           GestureDetector(
             onTap: () => {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => ListBerita()))
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (_) => ListBerita()))
             },
             child: Container(
               child: Row(
@@ -727,36 +736,41 @@ class _BerandaPageState extends State<BerandaPage> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: ListView(
+        scrollDirection: Axis.vertical,
         children: <Widget>[
-          Container(
-              height: 50.0,
-              width: double.infinity,
-              color: Colors.blueAccent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Apa si Jempolan??",
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                  height: 50.0,
+                  width: double.infinity,
+                  color: Colors.blueAccent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "Apa si Jempolan??",
+                        style: TextStyle(
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ],
+                  )),
+              SizedBox(
+                height: 25.0,
+              ),
+              Container(
+                margin: EdgeInsets.all(15),
+                child: Text(infoAplikasi.toString(),
                     style: TextStyle(
-                        fontSize: 25.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ],
-              )),
-          SizedBox(
-            height: 25.0,
+                        color: Colors.black38)),
+              )
+            ],
           ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: Text(infoAplikasi.toString(),
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38)),
-          )
         ],
       ),
     );

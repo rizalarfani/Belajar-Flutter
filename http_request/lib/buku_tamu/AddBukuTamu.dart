@@ -23,7 +23,6 @@ class _AddBukuTamuState extends State<AddBukuTamu> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        resizeToAvoidBottomPadding: false,
         key: _scaffoldState,
         appBar: AppBarBukuTamu(),
         body: _widgetAddBukuTamu(),
