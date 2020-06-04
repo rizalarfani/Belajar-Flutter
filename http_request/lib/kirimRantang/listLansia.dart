@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http_request/model/ApiService.dart';
 import 'package:http_request/model/modelLansia.dart';
-import 'package:http_request/kirimRantang/kirimRantang.dart';
 import 'package:http_request/kirimRantang/SendRantang.dart';
 
 class ListLansiaPdm extends StatefulWidget {
@@ -124,13 +123,13 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
                     ),
                     onDismissed: (DismissDirection direction) {
                       if(direction == DismissDirection.startToEnd || direction == DismissDirection.endToStart) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => KirimRantang(id: lansia.id)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendRantang(idLansia: lansia.id,)));
                         print("Aku sayang Vani");
                       }
                     },
                     child: ListTile(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendRantang()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendRantang(idLansia: lansia.id,)));
                       },
                       leading: Image.asset(lansia.jk == "L"
                           ? "assets/icons/man.png"
