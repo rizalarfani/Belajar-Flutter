@@ -74,6 +74,17 @@ class ApiService {
     }
   }
 
+  Future<List<Lansia>> listLansiaPdmAll(String kode) async {
+    final response = await client.get("$baseUrl/ApiLansia/listLansiAll/?kode_pdm=$kode");
+    if (response.statusCode == 200) {
+      final result = listLansia(response.body);
+      return result;
+    } else {
+      final result = jsonDecode(response.body);
+      return result;
+    }
+  }
+
   Future<dynamic> jumlahHistory(String kodepdm) async {
     final response = await client.get("$baseUrl/ApiLansia/infoJumlah?kode_pendamping=$kodepdm");
     if (response.statusCode == 200){

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http_request/model/ApiService.dart';
 import 'package:http_request/model/modelLansia.dart';
 import 'package:http_request/kirimRantang/SendRantang.dart';
@@ -15,6 +16,8 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
   ApiService apiservice;
   _ListLansiaPdmState({this.kodePdm});
 
+  ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -29,15 +32,18 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
         appBar: AppBar(
           leading: Image.asset(
             "assets/logo/logo_jempolan.png",
-              height: 25.0,
-              width: 25.0,
+            height: 25.0,
+            width: 25.0,
           ),
           title: Text("JEMPOLAN"),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.search),
               iconSize: 28,
-              onPressed: (){},
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: DataSearch(kodePdm: kodePdm));
+              },
             )
           ],
         ),
@@ -106,6 +112,7 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
                       topRight: Radius.circular(30)),
                   color: Colors.white),
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: listLansia.length,
                 physics: new ClampingScrollPhysics(),
                 scrollDirection: Axis.vertical,
@@ -114,37 +121,169 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
                   return Dismissible(
                     key: ValueKey(lansia),
                     background: Container(
-                      color: Colors.blueAccent,
-                      child: Icon(
-                        Icons.send,
-                        size: 30.0,
-                        color: Colors.white,
-                      )
-                    ),
+                        color: Colors.blueAccent,
+                        child: Icon(
+                          Icons.send,
+                          size: 30.0,
+                          color: Colors.white,
+                        )),
                     onDismissed: (DismissDirection direction) {
-                      if(direction == DismissDirection.startToEnd || direction == DismissDirection.endToStart) {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendRantang(idLansia: lansia.id,)));
+                      if (direction == DismissDirection.startToEnd ||
+                          direction == DismissDirection.endToStart) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SendRantang(
+                                      idLansia: lansia.id,
+                                    )));
                         print("Aku sayang Vani");
                       }
                     },
                     child: ListTile(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendRantang(idLansia: lansia.id,)));
-                      },
-                      leading: Image.asset(lansia.jk == "L"
-                          ? "assets/icons/man.png"
-                          : "assets/icons/grandmother.png"),
-                      title: Text(lansia.name),
-                      subtitle: Text(
-                        lansia.alamat,
-                        style: TextStyle(color: Colors.grey),
-                      )
-                    ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SendRantang(
+                                        idLansia: lansia.id,
+                                      )));
+                        },
+                        leading: Image.asset(lansia.jk == "L"
+                            ? "assets/icons/man.png"
+                            : "assets/icons/grandmother.png"),
+                        title: Text(lansia.name),
+                        subtitle: Text(
+                          lansia.alamat,
+                          style: TextStyle(color: Colors.grey),
+                        )),
                   );
                 },
               )),
         )
       ],
     );
+  }
+}
+
+class DataSearch extends SearchDelegate<String> {
+  String kodePdm;
+  DataSearch({this.kodePdm})
+      : super(
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.search,
+        );
+
+  ThemeData appBarTheme(BuildContext context) {
+    assert(context != null);
+    final ThemeData theme = Theme.of(context);
+    assert(theme != null);
+    return theme.copyWith(
+      primaryColor: Colors.blueAccent,
+    );
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [IconButton(icon: Icon(Icons.clear), onPressed: () => query = '')];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {}
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    if (query.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Center(
+            child: Text(
+              "Silahkan Cari Berdasarkan Nama",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0),
+            ),
+          )
+        ],
+      );
+    } else {
+      return FutureBuilder(
+        future: ApiService().listLansiaPdmAll(kodePdm),
+        builder: (BuildContext context, AsyncSnapshot<List<Lansia>> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                  "Something wrong with message: ${snapshot.error.toString()}"),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data.length >= 0) {
+              List<Lansia> list = snapshot.data;
+              final searchList =
+                  list.where((p) => p.name.startsWith(query)).toList();
+              return ListView.builder(
+                itemCount: searchList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Image.asset(list[index].jk == "L"
+                        ? "assets/icons/man.png"
+                        : "assets/icons/grandmother.png"),
+                    title: RichText(
+                      text: TextSpan(
+                          text:
+                              searchList[index].name.substring(0, query.length),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                              text: searchList[index].name.substring(query.length),
+                              style: TextStyle(
+                              color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                    ),
+                    subtitle: Text(searchList[index].alamat),
+                    trailing: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SendRantang(
+                                      idLansia: list[index].id,
+                                    )));
+                      },
+                      icon: Icon(Icons.send,
+                          size: 30.0, color: Colors.blueAccent),
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Text("Data Tidak diTukan"),
+              );
+            }
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      );
+    }
   }
 }
