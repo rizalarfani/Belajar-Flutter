@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mapbox/main.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +16,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(title: Text("Flutter Mapbox"),),
         backgroundColor: Colors.blue,
         body: Center(
-          child: Text("Mapbo Fluuter"),
+          child: Text("Mapbox Demo"),
         ),
       ),
     );

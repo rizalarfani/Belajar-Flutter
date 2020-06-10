@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http_request/berita/ListBeritaAppBar.dart';
 import 'package:http_request/model/modelBerita.dart';
 import 'package:http_request/model/ApiService.dart';
+import 'package:http_request/berita/DetailBerita.dart';
 
 class ListBerita extends StatefulWidget {
   @override
@@ -105,30 +106,36 @@ class _ListBeritaState extends State<ListBerita> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         ListTile(
-                          leading: Container(
-                            height: 120.0,
-                            width: 80.0,
-                            child: Image.network(
-                              'https://jempolan.tegalkota.go.id/uploads/berita/' +
-                                  listBerita.foto,
-                              fit: BoxFit.cover,
+                            leading: Container(
+                              height: 120.0,
+                              width: 80.0,
+                              child: Image.network(
+                                'https://jempolan.tegalkota.go.id/uploads/berita/' +
+                                    listBerita.foto,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          title: Text(
-                            listBerita.judul,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                          ),
-                          subtitle: Text(
-                            listBerita.created,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          trailing: Text(listBerita.aouthor,
-                              style: TextStyle(color: Colors.grey)),
-                          onTap: () {},
-                        ),
+                            title: Text(
+                              listBerita.judul,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                            ),
+                            subtitle: Text(
+                              listBerita.created,
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            trailing: Text(listBerita.aouthor,
+                                style: TextStyle(color: Colors.grey)),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailBerita(
+                                            id_berita: listBerita.idBerita,
+                                          )));
+                            }),
                       ],
                     ),
                   ),
