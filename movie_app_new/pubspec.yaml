@@ -1,4 +1,4 @@
-name: iot_smart_home
+name: movie_app_new
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -23,7 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^0.9.0
 
 
   # The following adds the Cupertino Icons font to your application.
