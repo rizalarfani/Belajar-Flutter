@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app_new/custom/itemTab.dart';
+import 'package:movie_app_new/custom/posterMovie.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -64,55 +65,21 @@ class _HomeState extends State<Home> {
           child: TabBarView(
             children: [
               Container(
-                child: PageView(
+                child: PageView.builder(
                   onPageChanged: (item) {
                     setState(() {
                       _selectPage = item;
                     });
                   },
                 controller: pageController,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: _selectPage == 0 ? 130 : 150, horizontal: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        "https://image.tmdb.org/t/p/w440_and_h660_face/wcaDIAG1QdXQLRaj4vC1EFdBT2.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: _selectPage == 1 ? 130 : 150, horizontal: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        "https://image.tmdb.org/t/p/w440_and_h660_face/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: _selectPage == 2 ? 130 : 150, horizontal: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        "https://image.tmdb.org/t/p/w440_and_h660_face/8kOWDBK6XlPUzckuHDo3wwVRFwt.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: _selectPage == 3 ? 130 : 150, horizontal: 15),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        "https://image.tmdb.org/t/p/w440_and_h660_face/wHa6KOJAoNTFLFtp7wguUJKSnju.jpg",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
+                itemCount: 10,
+                itemBuilder: (context,index) {
+                  return PosterMovie(
+                    selectPage: _selectPage,
+                    index: index,
+                    imgUrl: "https://image.tmdb.org/t/p/w440_and_h660_face/8WUVHemHFH2ZIP6NWkwlHWsyrEL.jpg",
+                  );
+                },
               )),
               Container(
                 child: Center(
