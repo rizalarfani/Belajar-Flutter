@@ -3,6 +3,7 @@ import 'package:movie_app_new/custom/itemRatingMovie.dart';
 import 'package:movie_app_new/custom/itemTab.dart';
 import 'package:movie_app_new/custom/posterMovie.dart';
 import 'package:movie_app_new/models/movie.dart';
+import 'package:movie_app_new/screen/movieDetail.dart';
 import 'package:movie_app_new/service/serviceMovie.dart';
 
 class Home extends StatefulWidget {
@@ -104,11 +105,22 @@ class _HomeState extends State<Home> {
                               controller: pageController,
                               itemCount: list.length,
                               itemBuilder: (context, index) {
-                                return PosterMovie(
-                                  selectPage: _selectPage,
-                                  index: index,
-                                  imgUrl:
-                                      "https://image.tmdb.org/t/p/w440_and_h660_face${list[index].posterPath}",
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MovieDetail(
+                                                  index: index,
+                                                  models: list[index],
+                                                )));
+                                  },
+                                  child: PosterMovie(
+                                    selectPage: _selectPage,
+                                    index: index,
+                                    imgUrl:
+                                        "https://image.tmdb.org/t/p/w440_and_h660_face${list[index].posterPath}",
+                                  ),
                                 );
                               },
                             ),

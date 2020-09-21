@@ -12,12 +12,17 @@ class ItemRatingMovie extends StatelessWidget {
         Text(
           '$rating',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 5,
         ),
         Text(
           '$titleRating',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Color.fromRGBO(156, 173, 244, 10),
+              fontWeight: FontWeight.bold),
         ),
       ],
     );

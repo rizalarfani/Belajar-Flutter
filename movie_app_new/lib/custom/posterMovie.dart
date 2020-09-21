@@ -12,11 +12,14 @@ class PosterMovie extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
           vertical: selectPage == index ? 10 : 30, horizontal: 15),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(
-          "$imgUrl",
-          fit: BoxFit.cover,
+      child: Hero(
+        tag: "$index",
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(
+            "$imgUrl",
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
