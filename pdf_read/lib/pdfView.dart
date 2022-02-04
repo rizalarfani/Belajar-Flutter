@@ -16,6 +16,9 @@ class _PdfViewState extends State<PdfView> {
   String? pathPdf;
   PdfViewerController? _pdfViewerController;
   _PdfViewState(this.pathPdf);
+  TextEditingController? halaman = TextEditingController();
+  int? _pageNumber = 0;
+  int? _pageCount = 0;
 
   @override
   void initState() {
@@ -30,7 +33,7 @@ class _PdfViewState extends State<PdfView> {
         title: Text('View PDF'),
         bottom: PreferredSize(
           child: Container(
-            height: 30,
+            height: 45,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -38,37 +41,85 @@ class _PdfViewState extends State<PdfView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [Text('asd'), Text('asd')],
+              children: [
+                Container(
+                  width: 50,
+                  height: 45,
+                  margin: EdgeInsets.all(5),
+                  child: TextField(
+                    controller: halaman!,
+                    onChanged: (value) {
+                      _pdfViewerController!
+                          .jumpToPage(int.parse(value.toString()));
+                      setState(() {
+                        _pageNumber = int.parse(value.toString());
+                      });
+                    },
+                    textInputAction: TextInputAction.search,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    decoration: new InputDecoration(
+                      hintText: '$_pageNumber',
+                      fillColor: Colors.white,
+                      border: InputBorder.none,
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 3.0),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(6),
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.only(
+                          bottom: 10.0, left: 10.0, right: 10.0),
+                      filled: true,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Text("Dari"),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Text("$_pageCount"),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _pdfViewerController!.previousPage();
+                    setState(() {
+                      _pageNumber = _pdfViewerController!.pageNumber;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colors.grey,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _pdfViewerController!.nextPage();
+                    setState(() {
+                      _pageNumber = _pdfViewerController!.pageNumber;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_right,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
           ),
           preferredSize: Size.fromHeight(30),
         ),
-        actions: [
-          IconButton(
-            onPressed: () => {
-              _pdfViewerController!.previousPage(),
-            },
-            icon: Icon(
-              Icons.keyboard_arrow_up,
-              color: Colors.white,
-            ),
-          ),
-          IconButton(
-            onPressed: () => {
-              _pdfViewerController!.nextPage(),
-            },
-            icon: Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white,
-            ),
-          )
-        ],
       ),
-      body: SfPdfViewer.asset(
-        '$pathPdf',
-        controller: _pdfViewerController,
-        enableDoubleTapZooming: true,
-      ),
+      body: SfPdfViewer.asset('$pathPdf',
+          controller: _pdfViewerController, enableDoubleTapZooming: true,
+          onDocumentLoaded: (PdfDocumentLoadedDetails detail) {
+        setState(() {
+          _pageNumber = _pdfViewerController!.pageNumber;
+          _pageCount = _pdfViewerController!.pageCount;
+        });
+      }),
     );
   }
 }
