@@ -11,7 +11,6 @@ class Landingpage extends StatefulWidget {
 }
 
 class _LandingpageState extends State<Landingpage> {
-
   var statusIsLogin;
   getPrev() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -27,7 +26,7 @@ class _LandingpageState extends State<Landingpage> {
       pref.remove("status");
       pref.remove("name");
     });
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
       return new Landingpage();
     }));
   }
@@ -54,8 +53,7 @@ class _LandingpageState extends State<Landingpage> {
     );
   }
 
-  Widget _buildBottomNavigation ()
-  {
+  Widget _buildBottomNavigation() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       onTap: (i) {
@@ -70,55 +68,38 @@ class _LandingpageState extends State<Landingpage> {
             Icons.home,
             color: Colors.blueAccent,
           ),
-          icon: Icon(
-            Icons.home,
-            color: Colors.grey
-          ),
-          title: Text(
-            "Beranda"
-          ),
+          icon: Icon(Icons.home, color: Colors.grey),
+          title: Text("Beranda"),
         ),
         BottomNavigationBarItem(
           activeIcon: Icon(
             Icons.map,
             color: Colors.blueAccent,
           ),
-          icon: Icon(
-            Icons.map,
-            color: Colors.grey
-          ),
-          title: Text(
-            "Peta Lansia"
-          ),
+          icon: Icon(Icons.map, color: Colors.grey),
+          title: Text("Peta Lansia"),
         ),
         BottomNavigationBarItem(
           activeIcon: Icon(
             Icons.new_releases,
             color: Colors.blueAccent,
           ),
-          icon: Icon(
-            Icons.new_releases,
-            color: Colors.grey
-          ),
-          title: Text(
-            "Berita"
-          ),
+          icon: Icon(Icons.new_releases, color: Colors.grey),
+          title: Text("Berita"),
         ),
-        BottomNavigationBarItem( 
+        BottomNavigationBarItem(
           activeIcon: Icon(
             Icons.verified_user,
             color: Colors.blueAccent,
           ),
           icon: Icon(
-            statusIsLogin == 200 ? Icons.settings_bluetooth : Icons.verified_user,
-            color: Colors.grey
-          ),
-          title: Text(
-            statusIsLogin == 200 ? "Logout" : "Login"
-          ),
+              statusIsLogin == 200
+                  ? Icons.settings_bluetooth
+                  : Icons.verified_user,
+              color: Colors.grey),
+          title: Text(statusIsLogin == 200 ? "Logout" : "Login"),
         ),
       ],
     );
   }
-
 }

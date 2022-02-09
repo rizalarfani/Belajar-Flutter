@@ -136,7 +136,6 @@ class _ListLansiaPdmState extends State<ListLansiaPdm> {
                                 builder: (context) => SendRantang(
                                       idLansia: lansia.id,
                                     )));
-                        print("Aku sayang Vani");
                       }
                     },
                     child: ListTile(
@@ -243,18 +242,17 @@ class DataSearch extends SearchDelegate<String> {
                         : "assets/icons/grandmother.png"),
                     title: RichText(
                       text: TextSpan(
-                          text:
-                              searchList[index].name.substring(0, query.length),
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold),
-                          children: [
-                            TextSpan(
-                              text: searchList[index].name.substring(query.length),
-                              style: TextStyle(
-                              color: Colors.grey),
-                            ),
-                          ],
-                        ),
+                        text: searchList[index].name.substring(0, query.length),
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        children: [
+                          TextSpan(
+                            text:
+                                searchList[index].name.substring(query.length),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                     subtitle: Text(searchList[index].alamat),
                     trailing: IconButton(

@@ -39,10 +39,11 @@ class _SendRantangState extends State<SendRantang> {
   String _alamat;
   String _foto;
   Future<dynamic> getLansiaDetail() async {
-    final response = await http.get("http://192.168.43.74/jempolan/ApiLansia/detailLansia?id=$idLansia");
-    if(response.statusCode == 200) {
+    final response = await http.get(
+        "http://192.168.43.74/jempolan/ApiLansia/detailLansia?id=$idLansia");
+    if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
-      Map <String, dynamic> dataResult = result['result'];
+      Map<String, dynamic> dataResult = result['result'];
       setState(() {
         _name = dataResult['NAMA'];
         _nik = dataResult['NIK'];
@@ -55,9 +56,11 @@ class _SendRantangState extends State<SendRantang> {
   }
 
   Future<dynamic> uploadImage(File imageFile) async {
-    var uri = Uri.parse("http://192.168.43.74/jempolan/ApiLansia/AddSendRantang");
-    var request = new http.MultipartRequest("POST",uri);
-    var multiPartFile =  await http.MultipartFile.fromPath("FOTO_BUKTI", imageFile.path);
+    var uri =
+        Uri.parse("http://192.168.43.74/jempolan/ApiLansia/AddSendRantang");
+    var request = new http.MultipartRequest("POST", uri);
+    var multiPartFile =
+        await http.MultipartFile.fromPath("FOTO_BUKTI", imageFile.path);
     String kodePdm;
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
@@ -80,15 +83,13 @@ class _SendRantangState extends State<SendRantang> {
           backgroundColor: Colors.greenAccent,
           content: Text(
             "Berhasil Send Rantang",
-            style: TextStyle(
-              color: Colors.white
-            ),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       );
       Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context) => Landingpage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Landingpage()));
       });
     } else {
       print("Gagal");
@@ -141,7 +142,7 @@ class _SendRantangState extends State<SendRantang> {
                         padding: EdgeInsets.all(8),
                       ),
                       Text(
-                      _name.toString(),
+                        _name.toString(),
                         style: TextStyle(
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
@@ -231,13 +232,14 @@ class _SendRantangState extends State<SendRantang> {
                     ),
                     RaisedButton(
                       onPressed: () {
-                        if(_keterangan == null || _image == null) {
-                          _scaffoldState.currentState.showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text("Maaf masih ada form yang kosong",style: TextStyle(color: Colors.white),),
-                            )
-                          );
+                        if (_keterangan == null || _image == null) {
+                          _scaffoldState.currentState.showSnackBar(SnackBar(
+                            backgroundColor: Colors.redAccent,
+                            content: Text(
+                              "Maaf masih ada form yang kosong",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ));
                         }
                         setState(() {
                           isLoading = true;
