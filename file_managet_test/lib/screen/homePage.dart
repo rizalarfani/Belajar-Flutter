@@ -15,11 +15,57 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> sort(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                  title: Text("Name"),
+                  onTap: () {
+                    widget.controller!.sortedBy = SortBy.name;
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                  title: Text("Size"),
+                  onTap: () {
+                    widget.controller!.sortedBy = SortBy.size;
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                  title: Text("Date"),
+                  onTap: () {
+                    widget.controller!.sortedBy = SortBy.date;
+                    Navigator.pop(context);
+                  }),
+              ListTile(
+                  title: Text("type"),
+                  onTap: () {
+                    widget.controller!.sortedBy = SortBy.type;
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title!),
+        actions: [
+          IconButton(
+            onPressed: () => sort(context),
+            icon: Icon(Icons.sort_rounded),
+          ),
+        ],
       ),
       body: Container(
         margin: EdgeInsets.all(10),
